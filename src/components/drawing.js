@@ -6,23 +6,59 @@ class Drawing extends React.Component {
   componentDidMount() {
     Paper.setup(this.canvas);
 
-    this.makeGrid(10, 10);
+    this.makeGrid(20, 20);
     let circleGroup = Paper.project.activeLayer.children[0];
-    circleGroup.children.map(cell => {
-      let circle = new Paper.Path.Circle(cell.bounds.center, 5);
-      circle.strokeWidth = 2;
-      let dot = new Paper.Path.Circle(circle.getPointAt(0), 5);
-      dot.fillColor = "white";
+
+    circleGroup.children.map((cell, i) => {
+      // let circle = new Paper.Path.Circle(cell.bounds.center, 5);
+      // circle.strokeWidth = 2;
+      // let dot = new Paper.Path.Circle(circle.getPointAt(0), 5);
+      // dot.fillColor = "white";
+      // let offset = 0;
+      // let movement = getRandomArbitrary(0.1, 0.8);
+      // dot.onFrame = function() {
+      //   this.bounds.center.set(circle.getPointAt(offset));
+      //   offset += movement;
+      //   if (offset > circle.length) {
+      //     offset = 0;
+      //   }
+      // };
+      // return circle;
+      let path = new Paper.Path(
+        cell.bounds.topLeft,
+        new Paper.Point(cell.bounds.topRight.x, cell.bounds.topRight.y)
+      );
+      // path.strokeColor = "red";
+      // path.strokeWidth = 1;
+      // path.strokeCap = "round";
+      path.bounds.center.set(cell.bounds.center);
       let offset = 0;
-      let movement = getRandomArbitrary(0.1, 0.8);
-      dot.onFrame = function() {
-        this.bounds.center.set(circle.getPointAt(offset));
-        offset += movement;
-        if (offset > circle.length) {
-          offset = 0;
+      // let n = 45;
+      // path.rotate(i * n);
+      let cir = new Paper.Path.Circle(path.getPointAt(path.length), 2);
+      cir.fillColor = "white";
+      let forwardMvmnt = true;
+      cir.onFrame = function() {
+        if (offset === 0) {
+          forwardMvmnt = true;
+        } else if (offset === Math.round(path.length) - 1) {
+          forwardMvmnt = false;
+          // offset--;
+        }
+        if (forwardMvmnt === true) {
+          this.bounds.center.set(path.getPointAt(offset));
+          offset++;
+        } else if (forwardMvmnt === false) {
+          this.bounds.center.set(path.getPointAt(offset));
+          offset--;
         }
       };
-      return circle;
+      path.onFrame = function() {
+        this.rotation += 0.01 * i;
+        // console.log(this.rotation);
+      };
+      // path.rotate(i * 166);
+      return cir;
     });
   }
 
@@ -64,8 +100,8 @@ class Drawing extends React.Component {
           ref={ref => {
             this.canvas = ref;
           }}
-          width={300}
-          height={300}
+          width={500}
+          height={500}
           className="backgroundCanvas"
         />
       </div>
