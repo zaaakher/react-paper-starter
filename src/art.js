@@ -38,6 +38,8 @@ let patterns = {
 			cir.removeSegment(0);
 			cir.rotate(getRandomInt(0, 360));
 			cir.fillColor = "red";
+			// cell.strokeColor = "yellow";
+			// cell.strokeWidth = 2;
 			return cell;
 		});
 		gridGroup.view.scale(0.8);
@@ -83,6 +85,70 @@ let patterns = {
 		});
 	},
 
+	"Overlapping Circles": function(size) {
+		let gridGroup = makeGrid(10, 10);
+		gridGroup.children.map((cell, i) => {
+			//Add cell code here
+			let cirSize = getRandomInt(1, size);
+			let cir = new Paper.Path.Circle(cell.bounds.center, cirSize);
+			cir.fillColor = "#EEC0C6";
+			console.log(cir.length);
+			let offset = getRandomInt(1, cir.length - 1);
+			let cir2Size = getRandomInt(1, size);
+			let cir2 = new Paper.Path.Circle(cir.getPointAt(offset), cir2Size);
+			cir2.fillColor = "#EEC0C6";
+			let inter = cir.intersect(cir2);
+			inter.fillColor = "#00B2CA";
+			//cell code ends here
+			return cell;
+		});
+	},
+	"Half Pies": function(size) {
+		let gridGroup = makeGrid(10, 10);
+		gridGroup.children.map((cell, i) => {
+			//Add cell code here
+			let colors = ["#000000", "#2E2E2E", "#5C5C5C", "#8B8B8B", "#B9B9B9"];
+			let angles = [0, 90, 180, 360];
+			let cir = new Paper.Path.Circle(
+				cell.bounds.bottomLeft,
+				cell.bounds.width / 2
+				// size
+			);
+			let shape = cir.intersect(cell);
+			let color = colors[getRandomInt(0, colors.length - 1)];
+			shape.strokeColor = color;
+			shape.fillColor = color;
+			shape.rotate(angles[getRandomInt(0, angles.length - 1)]);
+
+			//cell code ends here
+			return cell;
+		});
+	},
+	"Pointy Leaf": function(size) {
+		let gridGroup = makeGrid(10, 10);
+		gridGroup.children.map((cell, i) => {
+			//Add cell code here
+			// let colors = ["#000000", "#2E2E2E", "#5C5C5C", "#8B8B8B", "#B9B9B9"];
+
+			let angles = [0, 90, 180, 360];
+			let cir = Paper.Path.Circle(cell.bounds.topLeft, cell.bounds.width);
+			let cir2 = Paper.Path.Circle(cell.bounds.bottomRight, cell.bounds.width);
+			let inter = cir.intersect(cir2);
+
+			inter.fillColor = "red";
+			// inter.rotate(angles[getRandomInt(0, angles.length - 1)]);
+			if (cell.name === "red") {
+				inter.rotate(90);
+				inter.fillColor = "#B9B9B9";
+			} else {
+				inter.rotate(angles[getRandomInt(0, 1)]);
+				inter.fillColor = "#5C5C5C";
+			}
+			inter.scale(0.9);
+			//cell code ends here
+			return cell;
+		});
+	},
 	"Place holder": function(size) {
 		let gridGroup = makeGrid(10, 10);
 		gridGroup.children.map((cell, i) => {

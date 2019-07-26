@@ -43,6 +43,7 @@ const makeGrid = (cols, rows) => {
 			pt.set(cell.bounds.topRight);
 		}
 	}
+	gridGroup.bounds.center.set(Paper.project.view.center);
 	return gridGroup;
 };
 export {
