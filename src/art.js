@@ -2,9 +2,10 @@ import Paper from "paper";
 import { makeGrid, getRandomInt, getRandomElement } from "./util";
 
 let patterns = {
-	"Wavy Circles": function(size) {
-		let cirColor = "white";
-		let gridGroup = makeGrid(10, 10);
+	"Wavy Circles": function(properties) {
+		console.log(properties);
+		let cirColor = properties.color;
+		let gridGroup = makeGrid(properties.columns, properties.rows);
 		let cirGroup = new Paper.Group();
 		gridGroup.children.map((cell, i) => {
 			let path = new Paper.Path.Circle(
@@ -14,7 +15,10 @@ let patterns = {
 			let offset = 0;
 			let n = 35;
 			path.rotate(n * i);
-			let cir = new Paper.Path.Circle(path.getPointAt(path.length - 1), size);
+			let cir = new Paper.Path.Circle(
+				path.getPointAt(path.length - 1),
+				properties.size
+			);
 			cirGroup.addChild(cir);
 			cir.fillColor = cirColor;
 			cir.onFrame = function() {
@@ -37,12 +41,9 @@ let patterns = {
 			let cir = new Paper.Path.Circle(cell.bounds.center, size);
 			cir.removeSegment(0);
 			cir.rotate(getRandomInt(0, 360));
-			cir.fillColor = "red";
-			// cell.strokeColor = "yellow";
-			// cell.strokeWidth = 2;
+			cir.fillColor = "black";
 			return cell;
 		});
-		gridGroup.view.scale(0.8);
 	},
 	"Rotated Arches": function(size) {
 		let gridGroup = makeGrid(10, 10);
@@ -55,7 +56,7 @@ let patterns = {
 			arc.bounds.center.set(cell.bounds.center);
 			// arc.strokeWidth = getRandomInt(3, 30);
 			arc.strokeWidth = size;
-			arc.strokeColor = "white";
+			arc.strokeColor = "black";
 			arc.strokeCap = "round";
 			arc.scale(0.4);
 			arc.rotate(getRandomElement([0, 45, -45, 90, -90]));
@@ -72,19 +73,18 @@ let patterns = {
 					cell.bounds.center,
 					getRandomInt(1, size)
 				);
-				cir.fillColor = "white";
+				cir.fillColor = "black";
 			} else {
 				let cir = new Paper.Path.Circle(
 					cell.bounds.center,
 					getRandomInt(1, size)
 				);
-				cir.fillColor = "white";
+				cir.fillColor = "black";
 			}
 			//cell code ends here
 			return cell;
 		});
 	},
-
 	"Overlapping Circles": function(size) {
 		let gridGroup = makeGrid(10, 10);
 		gridGroup.children.map((cell, i) => {
