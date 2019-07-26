@@ -49,19 +49,6 @@ class Drawing extends React.Component {
 					alignItems: "center"
 				}}
 			>
-				<p>Pattern</p>
-				<select
-					value={this.state.pattern}
-					onChange={e =>
-						this.setState({ pattern: e.target.value, key: new Date() })
-					}
-				>
-					{Object.keys(patterns).map((pattern, index) => (
-						<option key={index} value={pattern}>
-							{pattern}
-						</option>
-					))}
-				</select>
 				<p>Columns</p>
 				<input
 					type="number"
@@ -90,6 +77,19 @@ class Drawing extends React.Component {
 						})
 					}
 				/>
+				<p>Pattern</p>
+				<select
+					value={this.state.pattern}
+					onChange={e =>
+						this.setState({ pattern: e.target.value, key: new Date() })
+					}
+				>
+					{Object.keys(patterns).map((pattern, index) => (
+						<option key={index} value={pattern}>
+							{pattern}
+						</option>
+					))}
+				</select>
 				<p>Size</p>
 				<input
 					className="form-control-range"
