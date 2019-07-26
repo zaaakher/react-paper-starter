@@ -49,6 +49,7 @@ class Drawing extends React.Component {
 					alignItems: "center"
 				}}
 			>
+				<p>Pattern</p>
 				<select
 					value={this.state.pattern}
 					onChange={e =>

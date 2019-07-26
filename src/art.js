@@ -91,7 +91,6 @@ let patterns = {
 			let cirSize = getRandomInt(1, properties.size);
 			let cir = new Paper.Path.Circle(cell.bounds.center, cirSize);
 			cir.fillColor = "#EEC0C6";
-			console.log(cir.length);
 			let offset = getRandomInt(1, cir.length - 1);
 			let cir2Size = getRandomInt(1, properties.size);
 			let cir2 = new Paper.Path.Circle(cir.getPointAt(offset), cir2Size);
@@ -110,7 +109,7 @@ let patterns = {
 			let angles = [0, 90, 180, 360];
 			let cir = new Paper.Path.Circle(
 				cell.bounds.bottomLeft,
-				cell.bounds.width / 2
+				cell.bounds.width
 			);
 			let shape = cir.intersect(cell);
 			let color = colors[getRandomInt(0, colors.length - 1)];
