@@ -3,7 +3,6 @@ import { makeGrid, getRandomInt, getRandomElement } from "./util";
 
 let patterns = {
 	"Wavy Circles": function(properties) {
-		console.log(properties);
 		let cirColor = properties.color;
 		let gridGroup = makeGrid(properties.columns, properties.rows);
 		let cirGroup = new Paper.Group();
@@ -35,18 +34,18 @@ let patterns = {
 		gridGroup.view.scale(0.8);
 		return cirGroup;
 	},
-	"Half Circles": function(size) {
-		let gridGroup = makeGrid(10, 10);
+	"Half Circles": function(properties) {
+		let gridGroup = makeGrid(properties.columns, properties.rows);
 		gridGroup.children.map((cell, i) => {
-			let cir = new Paper.Path.Circle(cell.bounds.center, size);
+			let cir = new Paper.Path.Circle(cell.bounds.center, properties.size);
 			cir.removeSegment(0);
 			cir.rotate(getRandomInt(0, 360));
-			cir.fillColor = "black";
+			cir.fillColor = properties.color;
 			return cell;
 		});
 	},
-	"Rotated Arches": function(size) {
-		let gridGroup = makeGrid(10, 10);
+	"Rotated Arches": function(properties) {
+		let gridGroup = makeGrid(properties.columns, properties.rows);
 		gridGroup.children.map((cell, i) => {
 			let arc = new Paper.Path.Arc(
 				cell.bounds.topLeft,
@@ -55,46 +54,46 @@ let patterns = {
 			);
 			arc.bounds.center.set(cell.bounds.center);
 			// arc.strokeWidth = getRandomInt(3, 30);
-			arc.strokeWidth = size;
-			arc.strokeColor = "black";
+			arc.strokeWidth = properties.size;
+			arc.strokeColor = properties.color;
 			arc.strokeCap = "round";
 			arc.scale(0.4);
 			arc.rotate(getRandomElement([0, 45, -45, 90, -90]));
 			return cell;
 		});
 	},
-	"Random Cricles": function(size) {
-		let gridGroup = makeGrid(10, 10);
+	"Random Cricles": function(properties) {
+		let gridGroup = makeGrid(properties.columns, properties.rows);
 		gridGroup.children.map((cell, i) => {
 			//Add cell code here
 			let randomN = getRandomInt(0, 5);
 			if (randomN < 3) {
 				let cir = new Paper.Path.Circle(
 					cell.bounds.center,
-					getRandomInt(1, size)
+					getRandomInt(1, properties.size)
 				);
-				cir.fillColor = "black";
+				cir.fillColor = properties.color;
 			} else {
 				let cir = new Paper.Path.Circle(
 					cell.bounds.center,
-					getRandomInt(1, size)
+					getRandomInt(1, properties.size)
 				);
-				cir.fillColor = "black";
+				cir.fillColor = properties.color;
 			}
 			//cell code ends here
 			return cell;
 		});
 	},
-	"Overlapping Circles": function(size) {
-		let gridGroup = makeGrid(10, 10);
+	"Overlapping Circles": function(properties) {
+		let gridGroup = makeGrid(properties.columns, properties.rows);
 		gridGroup.children.map((cell, i) => {
 			//Add cell code here
-			let cirSize = getRandomInt(1, size);
+			let cirSize = getRandomInt(1, properties.size);
 			let cir = new Paper.Path.Circle(cell.bounds.center, cirSize);
 			cir.fillColor = "#EEC0C6";
 			console.log(cir.length);
 			let offset = getRandomInt(1, cir.length - 1);
-			let cir2Size = getRandomInt(1, size);
+			let cir2Size = getRandomInt(1, properties.size);
 			let cir2 = new Paper.Path.Circle(cir.getPointAt(offset), cir2Size);
 			cir2.fillColor = "#EEC0C6";
 			let inter = cir.intersect(cir2);
@@ -103,8 +102,8 @@ let patterns = {
 			return cell;
 		});
 	},
-	"Half Pies": function(size) {
-		let gridGroup = makeGrid(10, 10);
+	"Half Pies": function(properties) {
+		let gridGroup = makeGrid(properties.columns, properties.rows);
 		gridGroup.children.map((cell, i) => {
 			//Add cell code here
 			let colors = ["#000000", "#2E2E2E", "#5C5C5C", "#8B8B8B", "#B9B9B9"];
@@ -112,20 +111,18 @@ let patterns = {
 			let cir = new Paper.Path.Circle(
 				cell.bounds.bottomLeft,
 				cell.bounds.width / 2
-				// size
 			);
 			let shape = cir.intersect(cell);
 			let color = colors[getRandomInt(0, colors.length - 1)];
 			shape.strokeColor = color;
 			shape.fillColor = color;
 			shape.rotate(angles[getRandomInt(0, angles.length - 1)]);
-
 			//cell code ends here
 			return cell;
 		});
 	},
-	"Pointy Leaf": function(size) {
-		let gridGroup = makeGrid(10, 10);
+	"Pointy Leaf": function(properties) {
+		let gridGroup = makeGrid(properties.columns, properties.rows);
 		gridGroup.children.map((cell, i) => {
 			//Add cell code here
 			// let colors = ["#000000", "#2E2E2E", "#5C5C5C", "#8B8B8B", "#B9B9B9"];
@@ -149,8 +146,8 @@ let patterns = {
 			return cell;
 		});
 	},
-	"Place holder": function(size) {
-		let gridGroup = makeGrid(10, 10);
+	"Place holder": function(properties) {
+		let gridGroup = makeGrid(properties.columns, properties.rows);
 		gridGroup.children.map((cell, i) => {
 			//Add cell code here
 
