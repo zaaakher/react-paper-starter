@@ -19,7 +19,6 @@ const randomCircles = cell => {
     cir.fillColor = "black";
   }
 };
-
 const metroLines = cell => {
   let pth = new Paper.Path();
   pth.add(new Paper.Point(0, 0));
@@ -41,7 +40,6 @@ const metroLines = cell => {
     }
   }
 };
-
 const slicedCircles = cell => {
   let cir = new Paper.Path.Circle(cell.bounds.center, cell.bounds.width / 2);
   cir.strokeColor = "black";
@@ -55,60 +53,6 @@ const slicedCircles = cell => {
   newP.strokeWidth = 0;
 };
 
-
-const slicedRectangles = cell => {
-  let rect = new Paper.Path.Rectangle(cell.bounds.topRight, cell.bounds.width);
-  rect.strokeWidth = 3;
-  rect.strokeColor = "black";
-  rect.strokeCap = "round";
-  rect.strokeJoin = "round";
-  rect.bounds.center.set(cell.bounds.center);
-  rect.fillColor = "black";
-  let newSeg = rect.removeSegment(getRandomInt(0, rect.segments.length));
-};
-const tessBlob = cell => {
-  // let baseColor = new Kolor("#6B5EFF");
-  let baseColor = new Kolor("#000000");
-  baseColor.l = getRandomInt(0, 80);
-  if (cell.name == "red") {
-    let cir = new Paper.Path.Circle(cell.bounds.center, 120);
-    cir.fillColor = baseColor.getHex();
-    // cir.selected = true;
-    let pt = cir.segments[getRandomInt(0, cir.segments.length - 1)].point;
-    pt.x += 30;
-    pt.y += 30;
-    cir.rotate(getRandomInt(0, 360));
-  }
-};
-const poppingCircles = cell => {
-  let cir = new Paper.Path.Circle(cell.bounds.center, 2);
-  cir.fillColor = "red";
-  cir.onFrame = function() {
-    let addSize;
-    let subSize;
-    if (cir.bounds.size.width <= 30) {
-      addSize = cir.bounds.size.add(new Paper.Size(getRandomArbitrary(0, 2)));
-      cir.bounds.size.set(addSize);
-      cir.bounds.center.set(cell.bounds.center);
-    } else if (cir.bounds.size.width >= 30) {
-      cir.bounds.size.set(new Paper.Size(2, 2));
-    }
-  };
-};
-const tessPoly = cell => {
-  if (cell.name == "red") {
-    let cir = new Paper.Path.Rectangle(
-      cell.bounds.center,
-      cell.bounds.width - 30
-    );
-    cir.fillColor = "black";
-    // cir.selected = true;
-    let pt = cir.segments[getRandomInt(0, cir.segments.length - 1)].point;
-    pt.x += 10;
-    pt.y += 10;
-    cir.rotate(getRandomInt(0, 360));
-  }
-};
 const randomPolygons = cell => {
   let cir = new Paper.Path.Rectangle(
     cell.bounds.center,

@@ -1,5 +1,12 @@
 import Paper from "paper";
-import { makeGrid, getRandomInt, getRandomElement, remapNumbers } from "./util";
+import Kolor from "kolorwheel";
+import {
+	makeGrid,
+	getRandomInt,
+	getRandomElement,
+	remapNumbers,
+	getRandomArbitrary
+} from "./util";
 
 let patterns = {
 	"Wavy Circles": function(properties) {
@@ -31,8 +38,7 @@ let patterns = {
 
 			return cell;
 		});
-		gridGroup.view.scale(0.8);
-		return cirGroup;
+		gridGroup.remove();
 	},
 	"Half Circles": function(properties) {
 		let gridGroup = makeGrid(properties.columns, properties.rows);
@@ -43,6 +49,7 @@ let patterns = {
 			cir.fillColor = properties.color;
 			return cell;
 		});
+		gridGroup.remove();
 	},
 	"Rotated Arches": function(properties) {
 		let gridGroup = makeGrid(properties.columns, properties.rows);
@@ -60,6 +67,7 @@ let patterns = {
 			arc.rotate(getRandomElement([0, 45, -45, 90, -90]));
 			return cell;
 		});
+		gridGroup.remove();
 	},
 	"Random Cricles": function(properties) {
 		let gridGroup = makeGrid(properties.columns, properties.rows);
@@ -80,6 +88,7 @@ let patterns = {
 			}
 			return cell;
 		});
+		gridGroup.remove();
 	},
 	"Overlapping Circles": function(properties) {
 		let gridGroup = makeGrid(properties.columns, properties.rows);
@@ -95,6 +104,7 @@ let patterns = {
 			inter.fillColor = "#00B2CA";
 			return cell;
 		});
+		gridGroup.remove();
 	},
 	"Half Pies": function(properties) {
 		let gridGroup = makeGrid(properties.columns, properties.rows);
@@ -112,6 +122,7 @@ let patterns = {
 			shape.rotate(angles[getRandomInt(0, angles.length - 1)]);
 			return cell;
 		});
+		gridGroup.remove();
 	},
 	"Pointy Leaf": function(properties) {
 		let gridGroup = makeGrid(properties.columns, properties.rows);
@@ -132,11 +143,12 @@ let patterns = {
 			inter.scale(0.9);
 			return cell;
 		});
+		gridGroup.remove();
 	},
 	"Black Cells": function(properties) {
 		let gridGroup = makeGrid(properties.columns, properties.rows);
 		gridGroup.children.map((cell, i) => {
-			cell.strokeWidth = properties.size;
+			// cell.strokeWidth = properties.strokeSize;
 			let n = getRandomInt(0, 5);
 			if (n < 5) {
 				cell.fillColor = properties.color;
@@ -163,6 +175,7 @@ let patterns = {
 			}
 			return cell;
 		});
+		gridGroup.remove();
 	},
 	"Circle Stars": function(properties) {
 		let gridGroup = makeGrid(properties.columns, properties.rows);
@@ -184,6 +197,7 @@ let patterns = {
 			}
 			return cell;
 		});
+		gridGroup.remove();
 	},
 	"Plus Sign": function(properties) {
 		let gridGroup = makeGrid(properties.columns, properties.rows);
@@ -207,6 +221,7 @@ let patterns = {
 			gr.scale(remapNumbers(properties.size, [0.1, 20], [0.1, 1]));
 			return cell;
 		});
+		gridGroup.remove();
 	},
 	"Smoshed Circles": function(properties) {
 		let gridGroup = makeGrid(properties.columns, properties.rows);
@@ -217,6 +232,7 @@ let patterns = {
 			cir.removeSegment(getRandomInt(0, cir.segments.length - 1));
 			return cell;
 		});
+		gridGroup.remove();
 	},
 	Ribbons: function(properties) {
 		let gridGroup = makeGrid(properties.columns, properties.rows);
@@ -231,6 +247,7 @@ let patterns = {
 			cir.strokeColor = properties.color;
 			return cell;
 		});
+		gridGroup.remove();
 	},
 	"Rotated Dashes": function(properties) {
 		let gridGroup = makeGrid(properties.columns, properties.rows);
@@ -246,6 +263,7 @@ let patterns = {
 			pol.strokeJoin = "round";
 			return cell;
 		});
+		gridGroup.remove();
 	},
 	"Tilted Lines": function(properties) {
 		let gridGroup = makeGrid(properties.columns, properties.rows);
@@ -272,6 +290,7 @@ let patterns = {
 
 			return cell;
 		});
+		gridGroup.remove();
 	},
 	"Tilted Lines 2": function(properties) {
 		let gridGroup = makeGrid(properties.columns, properties.rows);
@@ -292,9 +311,9 @@ let patterns = {
 				line.rotate(90);
 			}
 			line.scale(remapNumbers(properties.size, [0.1, 20], [0.1, 1]));
-
 			return cell;
 		});
+		gridGroup.remove();
 	},
 	"Sliced Rectangles": function(properties) {
 		let gridGroup = makeGrid(properties.columns, properties.rows);
@@ -313,6 +332,64 @@ let patterns = {
 			rect.scale(remapNumbers(properties.size, [0.1, 20], [0.1, 1]));
 			return cell;
 		});
+		gridGroup.remove();
+	},
+	"Tessellated Blobs": function(properties) {
+		let gridGroup = makeGrid(properties.columns, properties.rows);
+		gridGroup.children.map((cell, i) => {
+			// let baseColor = new Kolor("#6B5EFF");
+			let baseColor = new Kolor("#000000");
+			baseColor.l = getRandomInt(0, 80);
+			if (cell.name === "red") {
+				let cir = new Paper.Path.Circle(cell.bounds.center, properties.size);
+				cir.fillColor = baseColor.getHex();
+				// cir.selected = true;
+				let pt = cir.segments[getRandomInt(0, cir.segments.length - 1)].point;
+				pt.x += properties.modifySize * 2;
+				pt.y += properties.modifySize * 2;
+				cir.rotate(getRandomInt(0, 360));
+			}
+			return cell;
+		});
+		gridGroup.remove();
+	},
+	"Tessellated Poly": function(properties) {
+		let gridGroup = makeGrid(properties.columns, properties.rows);
+		gridGroup.children.map((cell, i) => {
+			if (cell.name === "red") {
+				let cir = new Paper.Path.Rectangle(cell.bounds.center, properties.size);
+				cir.fillColor = properties.color;
+				let pt = cir.segments[getRandomInt(0, cir.segments.length - 1)].point;
+				pt.x += properties.modifySize * 2;
+				pt.y += properties.modifySize * 2;
+				cir.rotate(getRandomInt(0, 360));
+				cir.bounds.center.set(cell.bounds.center);
+			}
+			return cell;
+		});
+		gridGroup.remove();
+	},
+	"Popping Circles": function(properties) {
+		let gridGroup = makeGrid(properties.columns, properties.rows);
+		gridGroup.children.map((cell, i) => {
+			let cir = new Paper.Path.Circle(cell.bounds.center, properties.size);
+			cir.fillColor = properties.color;
+			cir.onFrame = function() {
+				let addSize;
+				// let subSize;
+				if (cir.bounds.size.width <= 30) {
+					addSize = cir.bounds.size.add(
+						new Paper.Size(getRandomArbitrary(0, 2))
+					);
+					cir.bounds.size.set(addSize);
+					cir.bounds.center.set(cell.bounds.center);
+				} else if (cir.bounds.size.width >= 30) {
+					cir.bounds.size.set(new Paper.Size(2, 2));
+				}
+			};
+			return cell;
+		});
+		gridGroup.remove();
 	},
 	"Place holder": function(properties) {
 		let gridGroup = makeGrid(properties.columns, properties.rows);
