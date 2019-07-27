@@ -26,8 +26,8 @@ class App extends Component {
 			<div>
 				{this.state.width < 700 ? (
 					<div className="App-header">
-						This app is optimized for small screen. Please try it on a larger
-						screen.
+						This app is not optimized for small screens. Please try it on a
+						larger screen.
 						<p />
 					</div>
 				) : (

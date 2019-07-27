@@ -391,6 +391,81 @@ let patterns = {
 		});
 		gridGroup.remove();
 	},
+	"Squiggle Circle": function(properties) {
+		let gridGroup = makeGrid(properties.columns, properties.rows);
+		gridGroup.children.map((cell, i) => {
+			for (let i = 0; i < 1; i++) {
+				let cir = new Paper.Path.Circle(cell.bounds.center, properties.size);
+				cir.strokeColor = properties.color;
+				cir.strokeWidth = properties.strokeSize;
+
+				cir.segments[0].point.x += getRandomInt(0, properties.modifySize);
+				cir.rotate(getRandomInt(0, 360));
+				cir.bounds.center.set(cell.bounds.center);
+			}
+			return cell;
+		});
+		gridGroup.remove();
+	},
+	Space: function(properties) {
+		let gridGroup = makeGrid(properties.columns, properties.rows);
+		gridGroup.children.map((cell, i) => {
+			let rand = getRandomInt(0, 5);
+			if (rand < 1) {
+				let cirRadius = getRandomInt(1, properties.size);
+				let cir = new Paper.Path.Circle(cell.bounds.center, cirRadius);
+				cir.fillColor = properties.color;
+				let minWidth = cell.bounds.topLeft.x;
+				let maxWidth = cell.bounds.topRight.x;
+				let minHeight = cell.bounds.topLeft.y;
+				let maxHeight = cell.bounds.bottomLeft.y;
+				cir.bounds.center.set(
+					new Paper.Point(
+						getRandomInt(minWidth + cirRadius, maxWidth - cirRadius),
+						getRandomInt(minHeight + cirRadius, maxHeight - cirRadius)
+					)
+				);
+			}
+			return cell;
+		});
+		gridGroup.remove();
+	},
+	Maze: function(properties) {
+		let gridGroup = makeGrid(properties.columns, properties.rows);
+		gridGroup.children.map((cell, i) => {
+			let rect = new Paper.Path.Rectangle(
+				cell.bounds.center,
+				cell.bounds.width / 2
+			);
+			rect.fillColor = "#CFD11A";
+			rect.strokeColor = "#CFD11A";
+			rect.strokeWidth = 2;
+
+			let midRect = new Paper.Path.Rectangle(
+				cell.bounds.topLeft,
+				cell.bounds.width / 2
+			);
+			rect.bounds.center.set(cell.bounds.center);
+
+			midRect.fillColor = "#CFD11A";
+			midRect.strokeColor = "#CFD11A";
+			midRect.strokeWidth = 2;
+
+			let n = getRandomInt(0, 5);
+			midRect.bounds.center.set(cell.bounds.rightCenter);
+			if (n < 2) {
+				midRect.bounds.center.set(cell.bounds.bottomCenter);
+			}
+			if (
+				midRect.bounds.bottomRight.x > Paper.project.view.bounds.width ||
+				midRect.bounds.bottomRight.y > Paper.project.view.bounds.height
+			) {
+				midRect.remove();
+			}
+			return cell;
+		});
+		gridGroup.remove();
+	},
 	"Place holder": function(properties) {
 		let gridGroup = makeGrid(properties.columns, properties.rows);
 		gridGroup.children.map((cell, i) => {
@@ -399,6 +474,7 @@ let patterns = {
 			//cell code ends here
 			return cell;
 		});
+		gridGroup.remove();
 	}
 };
 export default patterns;
