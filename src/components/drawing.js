@@ -10,15 +10,15 @@ class Drawing extends React.Component {
 		super(props);
 		this.state = {
 			key: new Date(),
-			maxRange: 50,
 			properties: {
+				maxRange: 50,
 				size: 10,
 				strokeSize: 1,
-				modifySize: 1,
+				modifySize: 5,
 				columns: 10,
 				rows: 10,
-				color: "black",
-				bgColor: "white",
+				color: "#000000",
+				bgColor: "#ffffff",
 				pattern: "Wavy Circles"
 			}
 		};
@@ -55,7 +55,7 @@ class Drawing extends React.Component {
 					height: "100%",
 					width: "100%",
 					display: "flex",
-					justifyContent: "space-around",
+					justifyContent: "space-evenly",
 					flexDirection: "row",
 					alignItems: "center"
 				}}

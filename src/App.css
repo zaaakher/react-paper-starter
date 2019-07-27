@@ -13,3 +13,9 @@
 	margin: 10px;
 	text-align: center;
 }
+
+.selectors {
+	display: flex;
+	justify-content: space-evenly;
+	width: 30%;
+}
