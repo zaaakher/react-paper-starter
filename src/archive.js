@@ -1,127 +1,11 @@
 import Paper from "paper";
-import Kolor from "kolorwheel";
 import {
 	getRandomInt,
 	remapNumbers,
 	getRandomElement,
-	getRandomArbitrary
 } from "./util";
-import { rectToGrid } from "./draw";
-let randomPt = new Paper.Point(getRandomInt(0, 1080), getRandomInt(0, 1080));
 
-const randomCircles = cell => {
-	let randomN = getRandomInt(0, 5);
-	if (randomN < 3) {
-		let cir = new Paper.Path.Circle(cell.bounds.center, getRandomInt(50, 200));
-		cir.fillColor = "black";
-	} else {
-		let cir = new Paper.Path.Circle(cell.bounds.center, getRandomInt(30, 100));
-		cir.fillColor = "black";
-	}
-};
-const metroLines = cell => {
-	let pth = new Paper.Path();
-	pth.add(new Paper.Point(0, 0));
-	pth.add(new Paper.Point(0, 100));
-	pth.add(new Paper.Point(100, 0));
-	pth.add(new Paper.Point(0, 0));
-	pth.strokeColor = "black";
-	pth.strokeWidth = 2;
-	pth.strokeJoin = "round";
-	pth.fillColor = "red";
-	pth.fillColor.alpha = 0.3;
-	pth.scale(0.5);
-	pth.bounds.center.set(cell.bounds.center);
-	if (cell.name == "red") {
-		let n = getRandomInt(0, 6);
-		pth.rotate(90);
-		if (n <= 3) {
-			pth.rotate(180);
-		}
-	}
-};
-const slicedCircles = cell => {
-	let cir = new Paper.Path.Circle(cell.bounds.center, cell.bounds.width / 2);
-	cir.strokeColor = "black";
-	cir.strokeWidth = 50;
-	cir.strokeCap = "round";
-	let seg = cir.segments[getRandomInt(0, cir.segments.length - 1)].location;
-	let seg2 = cir.segments[getRandomInt(0, cir.segments.length - 1)].location;
-	let newP = cir.split(seg);
-	let newP2 = cir.split(seg2);
 
-	newP.strokeWidth = 0;
-};
-
-const randomPolygons = cell => {
-	let cir = new Paper.Path.Rectangle(
-		cell.bounds.center,
-		cell.bounds.width - 300
-	);
-	cir.fillColor = "black";
-	// cir.selected = true;
-	let pt = cir.segments[getRandomInt(0, cir.segments.length - 1)].point;
-	pt.x += 100;
-	pt.y += 100;
-	cir.rotate(getRandomInt(0, 360));
-};
-
-const rotatedSquareDashes = cell => {
-	let rect = new Paper.Path.Rectangle(cell.bounds.center, cell.bounds.width);
-	// rect.strokeColor = "black";
-	// rect.strokeWidth = 5;
-	rect.bounds.center.set(cell.bounds.center);
-	let lineGroup = new Paper.Group();
-	for (let i = 0; i < cell.bounds.width / 10; i++) {
-		let ln = new Paper.Path.Line(rect.bounds.topLeft, rect.bounds.bottomLeft);
-		ln.strokeWidth = 2;
-		ln.strokeColor = "red";
-		lineGroup.addChild(ln);
-	}
-	for (let i = 0; i < lineGroup.children.length; i++) {
-		lineGroup.children[i].position.x += 10 * i;
-	}
-
-	lineGroup.rotate(getRandomElement([45, 135]));
-	// lineGroup.rotate(getRandomElement([0, 45, 90, 135, 180]));
-};
-const dashedZigZags = cell => {
-	if (cell.name == "red") {
-		// rotatedSquareDashes(cell);
-		let rect = new Paper.Path.Rectangle(
-			cell.bounds.center,
-			cell.bounds.width - 80
-		);
-		rect.bounds.center.set(cell.bounds.center);
-		// rect.strokeWidth = 5;
-		// rect.strokeColor = "black";
-		let points = [];
-
-		for (let i = 0; i < 5; i++) {
-			points.push(rect.getPointAt(getRandomInt(10, rect.length - 10)));
-		}
-		let ln = new Paper.Path(points);
-		ln.strokeColor = "black";
-		ln.strokeWidth = 50;
-		ln.strokeJoin = "round";
-		ln.strokeCap = "round";
-		ln.dashArray = [1, 70];
-	}
-};
-
-const rotatedTriangles = cell => {
-	let baseColor = new Kolor("#000000");
-	baseColor.l = getRandomInt(0, 60);
-	let poly = new Paper.Path();
-	poly.add(cell.bounds.topRight);
-	poly.add(cell.bounds.bottomRight);
-	poly.add(cell.bounds.bottomLeft);
-	poly.fillColor = baseColor.getHex();
-	poly.strokeColor = baseColor.getHex();
-	if (getRandomInt(0, 1)) {
-		poly.rotate(getRandomElement([0, 90, 180, 270, 360]));
-	}
-};
 
 const cornerPattern = cell => {
 	let rect = new Paper.Path.Rectangle(
@@ -222,26 +106,7 @@ const harmonicRotatedLines = (cell, randomPt) => {
 	let t = remapNumbers(ds, [0, 1080], [0, 360]);
 	ln.rotate(t, ln.bounds.center);
 };
-const harmonicPointyLeaf = (cell, randomPt) => {
-	let angles = [0, 90, 180, 360];
-	let cir = Paper.Path.Circle(cell.bounds.topLeft, cell.bounds.width);
-	let cir2 = Paper.Path.Circle(cell.bounds.bottomRight, cell.bounds.width);
-	let inter = cir.intersect(cir2);
-	// inter.bounds.center.set(cell.bounds.center);
-	// inter.fillColor = "red";
-	// inter.rotate(angles[getRandomInt(0, angles.length - 1)]);
-	// if (cell.name === "red") {
-	//   inter.rotate(90);
-	inter.fillColor = "#5472A3";
-	// } else {
-	//   inter.rotate(angles[getRandomInt(0, 1)]);
-	//   inter.fillColor = "#C0CFE8";
-	// }
-	let distance = inter.bounds.center.getDistance(randomPt);
-	let t = remapNumbers(distance, [0, 1080], [0, 360]);
-	inter.rotate(t, inter.bounds.center);
-	inter.scale(0.5);
-};
+
 const gradientBlackCells = (cell, randomPt) => {
 	let distance = cell.bounds.center.getDistance(randomPt);
 	let t = remapNumbers(distance, [0, 500], [0, 1]);
@@ -260,44 +125,6 @@ const importedGraphic = (cell, randomPt) => {
 		p.rotate(t, p.bounds.center);
 		p.scale(0.4);
 	});
-};
-const harmonicOsciliation = (cell, i, randomPt) => {
-	// osciliatingInLine(cell, i);
-
-	let path = new Paper.Path(
-		cell.bounds.topLeft,
-		new Paper.Point(cell.bounds.topRight.x + 10, cell.bounds.topRight.y)
-	);
-	// path.strokeColor = "red";
-	// path.strokeWidth = 8;
-	// path.strokeCap = "round";
-	path.bounds.center.set(cell.bounds.center);
-	let offset = 0;
-	// let n = 45;
-	// path.rotate(n * i);
-	let cir = new Paper.Path.Circle(path.getPointAt(path.length), 5);
-	cir.fillColor = "blue";
-	let forwardMvmnt = true;
-
-	let ds = path.bounds.center.getDistance(randomPt);
-	let t = remapNumbers(ds, [0, 100], [0, 360]);
-	path.rotate(t, path.bounds.center);
-
-	cir.onFrame = function() {
-		if (offset == 0) {
-			forwardMvmnt = true;
-		} else if (offset == Math.round(path.length) - 1) {
-			forwardMvmnt = false;
-			// offset--;
-		}
-		if (forwardMvmnt == true) {
-			this.bounds.center.set(path.getPointAt(offset));
-			offset++;
-		} else if (forwardMvmnt == false) {
-			this.bounds.center.set(path.getPointAt(offset));
-			offset--;
-		}
-	};
 };
 
 const maydanPattern = cell => {
@@ -355,24 +182,11 @@ const innerMaze = (cell, x, y, i, borderCells) => {
 export {
 	innerMaze,
 	maydanPattern,
-	wavyCircles,
-	harmonicOsciliation,
 	gradientRect,
 	hilalPattern,
 	cornerPattern,
-	randomChecker,
-	rotatedTriangles,
-	randomCellColor,
-	dashedZigZags,
-	rotatedSquareDashes,
-	traingleArrow,
-	randomPolygons,
 	gradientBlackCells,
-	harmonicPointyLeaf,
 	harmonicRotatedLines,
-	slicedCircles,
-	metroLines,
 	textInCells,
-	randomCircles,
 	importedGraphic
 };

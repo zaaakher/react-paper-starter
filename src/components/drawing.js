@@ -19,7 +19,7 @@ class Drawing extends React.Component {
 				rows: 10,
 				color: "#000000",
 				bgColor: "#ffffff",
-				pattern: "Wavy Circles"
+				pattern: Object.keys(patterns)[0]
 			}
 		};
 		this.handleChange = this.handleChange.bind(this);

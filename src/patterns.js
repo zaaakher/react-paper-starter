@@ -10,6 +10,36 @@ import {
 } from "./util";
 
 let patterns = {
+	Playground: function(properties) {
+		let gridGroup = makeGrid(properties.columns, properties.rows);
+		let oddCircles = new Paper.Group();
+		let evenCircles = new Paper.Group();
+		gridGroup.children.map((cell, i) => {
+			let cir = new Paper.Path.Circle(cell.bounds.center, properties.size);
+			cir.strokeWidth = properties.strokeSize;
+			cir.strokeColor = properties.color;
+
+			if (cell.name === "red") {
+				oddCircles.addChild(cir);
+			} else {
+				evenCircles.addChild(cir);
+			}
+			oddCircles.fillColor = "red";
+			evenCircles.fillColor = "blue";
+			// let overlap;
+			oddCircles.children.map(o => {
+				evenCircles.children.map(e => {
+					console.log(`${o} and ${e}`);
+					// overlap.fillColor = "yellow";
+					return e;
+				});
+				return o;
+			});
+			// overlap.fillColor = "yellow";
+			return cell;
+		});
+		gridGroup.remove();
+	},
 	"Wavy Circles": function(properties) {
 		let cirColor = properties.color;
 		let gridGroup = makeGrid(properties.columns, properties.rows);
@@ -468,6 +498,25 @@ let patterns = {
 		});
 		gridGroup.remove();
 	},
+	"Sliced Circles": function(properties) {
+		let gridGroup = makeGrid(properties.columns, properties.rows);
+		gridGroup.children.map((cell, i) => {
+			let cir = new Paper.Path.Circle(cell.bounds.center, properties.size / 2);
+			cir.strokeColor = properties.color;
+			cir.strokeWidth = properties.strokeSize;
+			cir.strokeCap = "round";
+			let seg = cir.segments[getRandomInt(0, cir.segments.length - 1)].location;
+			let seg2 =
+				cir.segments[getRandomInt(0, cir.segments.length - 1)].location;
+			let newP = cir.split(seg);
+			let newP2 = cir.split(seg2);
+
+			newP.strokeWidth = 0;
+			newP2.strokWidth = 0;
+			return cell;
+		});
+		gridGroup.remove();
+	},
 	"Tessellated Blobs": function(properties) {
 		let gridGroup = makeGrid(properties.columns, properties.rows);
 		gridGroup.children.map((cell, i) => {
@@ -906,7 +955,180 @@ let patterns = {
 			return cell;
 		});
 	},
-	
+	"Colored Triangles": function(properties) {
+		let gridGroup = makeGrid(properties.columns, properties.rows);
+		gridGroup.children.map((cell, i) => {
+			let baseColor = new Kolor(properties.color);
+			baseColor.l = getRandomInt(0, properties.modifySize);
+			let poly = new Paper.Path();
+			poly.add(cell.bounds.topRight);
+			poly.add(cell.bounds.bottomRight);
+			poly.add(cell.bounds.bottomLeft);
+			poly.fillColor = baseColor.getHex();
+			poly.strokeColor = baseColor.getHex();
+			if (getRandomInt(0, 1)) {
+				poly.rotate(getRandomElement([0, 90, 180, 270, 360]));
+			}
+			return cell;
+		});
+		gridGroup.remove();
+	},
+	"Dashed Polylines": function(properties) {
+		let gridGroup = makeGrid(properties.columns, properties.rows);
+		gridGroup.children.map((cell, i) => {
+			if (cell.name === "red") {
+				let rect = new Paper.Path.Rectangle(
+					cell.bounds.center,
+					cell.bounds.width - properties.size
+				);
+				rect.bounds.center.set(cell.bounds.center);
+				let points = [];
+
+				for (let i = 0; i < 5; i++) {
+					points.push(rect.getPointAt(getRandomInt(10, rect.length - 10)));
+				}
+				let ln = new Paper.Path(points);
+				ln.strokeColor = properties.color;
+				ln.strokeWidth = properties.strokeSize;
+				ln.strokeJoin = "round";
+				ln.strokeCap = "round";
+				ln.dashArray = [1, properties.modifySize];
+			}
+			return cell;
+		});
+		gridGroup.remove();
+	},
+	"Rotated Stripes": function(properties) {
+		//70 1 40
+		let gridGroup = makeGrid(properties.columns, properties.rows);
+		gridGroup.children.map((cell, i) => {
+			let rect = new Paper.Path.Rectangle(cell.bounds.center, properties.size);
+			rect.bounds.center.set(cell.bounds.center);
+			let lineGroup = new Paper.Group();
+			for (let i = 0; i < cell.bounds.width / 10; i++) {
+				let ln = new Paper.Path.Line(
+					rect.bounds.topLeft,
+					rect.bounds.bottomLeft
+				);
+				ln.strokeWidth = properties.strokeSize;
+				ln.strokeColor = properties.color;
+				lineGroup.addChild(ln);
+			}
+			for (let i = 0; i < lineGroup.children.length; i++) {
+				lineGroup.children[i].position.x += properties.modifySize * i;
+			}
+
+			lineGroup.rotate(getRandomElement([45, 135]));
+			return cell;
+		});
+		gridGroup.remove();
+	},
+	Metro: function(properties) {
+		let gridGroup = makeGrid(properties.columns, properties.rows);
+		gridGroup.children.map((cell, i) => {
+			let pth = new Paper.Path();
+
+			pth.add(new Paper.Point(0, 0));
+			pth.add(new Paper.Point(0, 100));
+			pth.add(new Paper.Point(100, 0));
+			pth.add(new Paper.Point(0, 0));
+
+			pth.strokeJoin = "round";
+			pth.fillColor = properties.color;
+			pth.scale(0.5);
+			pth.bounds.center.set(cell.bounds.center);
+			if (cell.name === "red") {
+				let n = getRandomInt(0, 6);
+				pth.rotate(90);
+				if (n <= 3) {
+					pth.rotate(180);
+				}
+			}
+			return cell;
+		});
+		gridGroup.remove();
+	},
+	"Harmonic Dots": function(properties) {
+		let randomPt = new Paper.Point(
+			getRandomInt(10, Paper.project.view.size.height),
+			getRandomInt(10, Paper.project.view.size.width)
+		);
+		let gridGroup = makeGrid(properties.columns, properties.rows);
+		gridGroup.children.map((cell, i) => {
+			let path = new Paper.Path(
+				cell.bounds.topLeft,
+				new Paper.Point(cell.bounds.topRight.x + 10, cell.bounds.topRight.y)
+			);
+			path.bounds.center.set(cell.bounds.center);
+			let offset = 0;
+			let cir = new Paper.Path.Circle(path.getPointAt(path.length), 5);
+			cir.fillColor = "blue";
+			let forwardMvmnt = true;
+
+			let ds = path.bounds.center.getDistance(randomPt);
+			let t = remapNumbers(ds, [0, 100], [0, 360]);
+			path.rotate(t, path.bounds.center);
+
+			cir.onFrame = function() {
+				if (offset === 0) {
+					forwardMvmnt = true;
+				} else if (offset === Math.round(path.length) - 1) {
+					forwardMvmnt = false;
+				}
+				if (forwardMvmnt === true) {
+					this.bounds.center.set(path.getPointAt(offset));
+					offset++;
+				} else if (forwardMvmnt === false) {
+					this.bounds.center.set(path.getPointAt(offset));
+					offset--;
+				}
+			};
+			return cell;
+		});
+		gridGroup.remove();
+	},
+	"Harmonic Leaves": function(properties) {
+		let randomPt = new Paper.Point(
+			getRandomInt(10, Paper.project.view.size.height),
+			getRandomInt(10, Paper.project.view.size.width)
+		);
+		let gridGroup = makeGrid(properties.columns, properties.rows);
+		gridGroup.children.map((cell, i) => {
+			let cir = Paper.Path.Circle(
+				cell.bounds.topLeft,
+				properties.size < 36 ? 40 : properties.size
+			);
+			let cir2 = Paper.Path.Circle(
+				cell.bounds.bottomRight,
+				properties.size < 36 ? 40 : properties.size
+			);
+			let inter = cir.intersect(cir2);
+			inter.fillColor = properties.color;
+			let distance = inter.bounds.center.getDistance(randomPt);
+			let t = remapNumbers(distance, [0, 1080], [0, 360]);
+			inter.rotate(t, inter.bounds.center);
+			inter.scale(0.5);
+			return cell;
+		});
+		gridGroup.remove();
+	},
+	"Rotated Moons": function(properties) {
+		//31 1 86
+		let gridGroup = makeGrid(properties.columns, properties.rows);
+		gridGroup.children.map((cell, i) => {
+			let cir = new Paper.Path.Circle(cell.bounds.center, properties.size);
+			let cir2 = new Paper.Path.Circle(
+				cir.getPointAt(0),
+				properties.size - properties.modifySize
+			);
+			let inter = cir.subtract(cir2);
+			inter.scale(0.8);
+			inter.fillColor = properties.color;
+			inter.rotate(getRandomElement([0, 45, 90, 135, 180, 225, 270, 315, 360]));
+			return cell;
+		});
+		gridGroup.remove();
+	},
 	"Place holder": function(properties) {
 		let gridGroup = makeGrid(properties.columns, properties.rows);
 		gridGroup.children.map((cell, i) => {
