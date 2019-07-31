@@ -1,11 +1,5 @@
 import Paper from "paper";
-import {
-	getRandomInt,
-	remapNumbers,
-	getRandomElement,
-} from "./util";
-
-
+import { getRandomInt, remapNumbers, getRandomElement } from "./util";
 
 const cornerPattern = cell => {
 	let rect = new Paper.Path.Rectangle(
@@ -38,7 +32,7 @@ const cornerPattern = cell => {
 
 	// let distance = cell.bounds.center.getDistance(randomPt);
 	// let t = remapNumbers(distance, [0, 1080], [0, 180]);
-	corner.rotate(t, cell.bounds.center);
+	// corner.rotate(t, cell.bounds.center);
 };
 
 const hilalPattern = cell => {
@@ -166,7 +160,7 @@ const innerMaze = (cell, x, y, i, borderCells) => {
 		strokeCap: "round"
 	});
 	if (borderCells) {
-		if (i % x == 0 || i < x || borderCells.includes(i) || i > x * y - x - 1) {
+		if (i % x === 0 || i < x || borderCells.includes(i) || i > x * y - x - 1) {
 			if (cell.name === "red") {
 				path.rotate(90, cell.bounds.center);
 			} else {
