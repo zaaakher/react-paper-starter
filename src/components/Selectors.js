@@ -73,6 +73,18 @@ const Selectors = props => (
 				name="bgColor"
 				onChange={props.handleChange}
 			/>
+			<br />
+			<br />
+			<p>Rotation: {props.mainState.properties.rotation}</p>
+			<input
+				className="form-control-range"
+				type="range"
+				min="1"
+				max={props.mainState.properties.maxRange}
+				name="rotation"
+				value={props.mainState.properties.rotation}
+				onChange={props.handleChange}
+			/>
 		</div>
 	</div>
 );

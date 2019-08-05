@@ -11,9 +11,10 @@ class Drawing extends React.Component {
 		this.state = {
 			key: new Date(),
 			properties: {
+				rotation: 10,
 				maxRange: 50,
 				size: 10,
-				divisions: 6,
+				divisions: 7,
 				strokeSize: 1,
 				xOffset: 5,
 				yOffset: 5,
@@ -39,8 +40,29 @@ class Drawing extends React.Component {
 		this.makeCaligraphy(this.state.properties);
 		Paper.project.view.scale(0.8);
 	}
+	handleChange(e) {
+		let property = e.target.name;
+		if (e.target.type === "checkbox") {
+			this.setState({
+				key: new Date(),
+				properties: {
+					...this.state.properties,
+					[property]: e.target.checked
+				}
+			});
+		} else {
+			this.setState({
+				key: new Date(),
+				properties: {
+					...this.state.properties,
+					[property]: e.target.value
+				}
+			});
+		}
+	}
 	makeCaligraphy(props) {
 		// console.log(props);
+
 		let mainText = new Paper.PointText(Paper.view.center);
 		mainText.content = props.text;
 		mainText.justification = "center";
@@ -56,20 +78,15 @@ class Drawing extends React.Component {
 			[0, props.maxRange],
 			[0, Paper.view.bounds.height]
 		);
+		let textGroup = new Paper.Group();
+
 		for (let i = 0; i < props.divisions; i++) {
 			let tempText = mainText.clone();
 			tempText.rotate((360 / props.divisions) * i, Paper.view.center);
+			textGroup.addChild(tempText);
 		}
-	}
-	handleChange(e) {
-		let property = e.target.name;
-		this.setState({
-			key: new Date(),
-			properties: {
-				...this.state.properties,
-				[property]: e.target.value
-			}
-		});
+		textGroup.rotate(props.rotation,Paper.view.center);
+		mainText.remove();
 	}
 	render() {
 		return (
@@ -89,6 +106,7 @@ class Drawing extends React.Component {
 					mainState={this.state}
 					handleChange={e => this.handleChange(e)}
 				/>
+
 				<canvas
 					onClick={() => this.setState({ key: new Date() })}
 					style={{ backgroundColor: this.state.properties.bgColor }}
