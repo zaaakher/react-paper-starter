@@ -1,8 +1,8 @@
 import React from "react";
 import Paper from "paper";
 
-import patterns from "../patterns";
 import Selectors from "./Selectors";
+import { remapNumbers } from "../util";
 // import { getRandomInt } from "../util";
 
 class Drawing extends React.Component {
@@ -13,28 +13,53 @@ class Drawing extends React.Component {
 			properties: {
 				maxRange: 50,
 				size: 10,
+				divisions: 6,
 				strokeSize: 1,
-				modifySize: 5,
-				columns: 10,
-				rows: 10,
+				xOffset: 5,
+				yOffset: 5,
+				text: "Hello World!",
 				color: "#000000",
-				bgColor: "#ffffff",
-				pattern: Object.keys(patterns)[0]
+				bgColor: "#ffffff"
 			}
 		};
 		this.handleChange = this.handleChange.bind(this);
+		this.makeCaligraphy = this.makeCaligraphy.bind(this);
 	}
 	componentDidMount() {
 		Paper.setup(this.canvas);
 		Paper.project.clear();
-		patterns[this.state.properties.pattern](this.state.properties);
+		// patterns[this.state.properties.pattern](this.state.properties);
+		this.makeCaligraphy(this.state.properties);
 		Paper.project.view.scale(0.8);
 	}
 	componentDidUpdate() {
 		Paper.setup(this.canvas);
 		Paper.project.clear();
-		patterns[this.state.properties.pattern](this.state.properties);
+		// patterns[this.state.properties.pattern](this.state.properties);
+		this.makeCaligraphy(this.state.properties);
 		Paper.project.view.scale(0.8);
+	}
+	makeCaligraphy(props) {
+		// console.log(props);
+		let mainText = new Paper.PointText(Paper.view.center);
+		mainText.content = props.text;
+		mainText.justification = "center";
+		mainText.fillColor = props.color;
+		mainText.fontSize = props.size;
+		mainText.position.x = remapNumbers(
+			props.xOffset,
+			[0, props.maxRange],
+			[0, Paper.view.bounds.width]
+		);
+		mainText.position.y = remapNumbers(
+			props.yOffset,
+			[0, props.maxRange],
+			[0, Paper.view.bounds.height]
+		);
+		for (let i = 0; i < props.divisions; i++) {
+			let tempText = mainText.clone();
+			tempText.rotate((360 / props.divisions) * i, Paper.view.center);
+		}
 	}
 	handleChange(e) {
 		let property = e.target.name;

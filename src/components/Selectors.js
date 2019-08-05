@@ -4,24 +4,11 @@ import patterns from "../patterns";
 const Selectors = props => (
 	<div className="selectors">
 		<div>
-			<p>Pattern: {props.mainState.properties.pattern}</p>
-			<select
-				name="pattern"
-				value={props.mainState.properties.pattern}
-				onChange={props.handleChange}
-			>
-				{Object.keys(patterns).map((pattern, index) => (
-					<option key={index} value={pattern}>
-						{pattern}
-					</option>
-				))}
-			</select>
+			<p>Text: {props.mainState.properties.text}</p>
+			<input type="text" name="text" onChange={props.handleChange} />
 
-			<p>Columns: {props.mainState.properties.columns}</p>
-			<input type="number" name="columns" onChange={props.handleChange} />
-
-			<p>Rows: {props.mainState.properties.rows}</p>
-			<input type="number" name="rows" onChange={props.handleChange} />
+			<p>Divisions: {props.mainState.properties.divisions}</p>
+			<input type="number" name="divisions" onChange={props.handleChange} />
 
 			<p>Max Range: {props.mainState.properties.maxRange}</p>
 			<input type="number" name="maxRange" onChange={props.handleChange} />
@@ -36,7 +23,7 @@ const Selectors = props => (
 				value={props.mainState.properties.size}
 				onChange={props.handleChange}
 			/>
-
+			{/* 
 			<p>Stroke Size: {props.mainState.properties.strokeSize}</p>
 			<input
 				className="form-control-range"
@@ -46,16 +33,27 @@ const Selectors = props => (
 				name="strokeSize"
 				value={props.mainState.properties.strokeSize}
 				onChange={props.handleChange}
-			/>
+			/> */}
 
-			<p>Modify: {props.mainState.properties.modifySize}</p>
+			<p>x-offset: {props.mainState.properties.xOffset}</p>
 			<input
 				className="form-control-range"
 				type="range"
 				min="1"
 				max={props.mainState.properties.maxRange}
-				name="modifySize"
-				value={props.mainState.properties.modifySize}
+				name="xOffset"
+				value={props.mainState.properties.xOffset}
+				onChange={props.handleChange}
+			/>
+
+			<p>y-offset: {props.mainState.properties.yOffset}</p>
+			<input
+				className="form-control-range"
+				type="range"
+				min="1"
+				max={props.mainState.properties.maxRange}
+				name="yOffset"
+				value={props.mainState.properties.yOffset}
 				onChange={props.handleChange}
 			/>
 		</div>
