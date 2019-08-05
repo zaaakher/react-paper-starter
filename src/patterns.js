@@ -12,30 +12,73 @@ import {
 let patterns = {
 	Playground: function(properties) {
 		let gridGroup = makeGrid(properties.columns, properties.rows);
-		let oddCircles = new Paper.Group();
-		let evenCircles = new Paper.Group();
 		gridGroup.children.map((cell, i) => {
 			let cir = new Paper.Path.Circle(cell.bounds.center, properties.size);
-			cir.strokeWidth = properties.strokeSize;
-			cir.strokeColor = properties.color;
+			cir.fillColor = properties.color;
+			return cell;
+		});
+		gridGroup.remove();
+	},
+	"Harmonic Lines": function(properties) {
+		let randomPt = new Paper.Point(
+			getRandomInt(10, Paper.project.view.size.height),
+			getRandomInt(10, Paper.project.view.size.width)
+		);
 
-			if (cell.name === "red") {
-				oddCircles.addChild(cir);
-			} else {
-				evenCircles.addChild(cir);
+		let gridGroup = makeGrid(properties.columns, properties.rows);
+		gridGroup.children.map((cell, i) => {
+			let line = new Paper.Path.Line(
+				cell.bounds.bottomCenter,
+				cell.bounds.topCenter
+			);
+			line.strokeColor = properties.color;
+			line.strokeWidth = properties.strokeSize;
+			line.strokeCap = "round";
+
+			let distance = cell.bounds.center.getDistance(randomPt);
+			let t = remapNumbers(distance, [0, 1080], [0, 360]);
+			line.rotate(t, cell.bounds.center);
+			line.scale(
+				remapNumbers(
+					properties.modifySize,
+					[0.1, properties.maxRange],
+					[0.1, 1]
+				)
+			);
+			return cell;
+		});
+		gridGroup.remove();
+	},
+	"Dish Dashes": function(properties) {
+		let gridGroup = makeGrid(properties.columns, properties.rows);
+		gridGroup.children.map((cell, i) => {
+			let ln = new Paper.Path.Line(
+				cell.bounds.topCenter,
+				cell.bounds.bottomCenter
+			);
+			ln.strokeCap = "round";
+			ln.strokeColor = properties.color;
+			ln.strokeWidth = properties.strokeSize;
+			if (getRandomInt(0, 3) < 2) {
+				ln.scale(getRandomArbitrary(0.1, 0.8));
 			}
-			oddCircles.fillColor = "red";
-			evenCircles.fillColor = "blue";
-			// let overlap;
-			oddCircles.children.map(o => {
-				evenCircles.children.map(e => {
-					console.log(`${o} and ${e}`);
-					// overlap.fillColor = "yellow";
-					return e;
-				});
-				return o;
+			ln.rotate(properties.modifySize);
+			return cell;
+		});
+		gridGroup.remove();
+	},
+	"Cell Columns": function(properties) {
+		let gridGroup = makeGrid(properties.columns, properties.rows);
+		gridGroup.children.map((cell, i) => {
+			let grid = rectToGrid(cell, properties.modifySize, 1);
+			grid.children.map(cell => {
+				cell.strokeColor = properties.color;
+				cell.strokeWidth = properties.strokeSize;
+				return cell;
 			});
-			// overlap.fillColor = "yellow";
+			if (getRandomInt(0, 3) < 2) {
+				grid.rotate(90);
+			}
 			return cell;
 		});
 		gridGroup.remove();
