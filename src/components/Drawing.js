@@ -9,6 +9,11 @@ class Drawing extends React.Component {
 		this.state = {
 			key: new Date(),
 			properties: {
+				//Add properties here
+				//value: input value
+				//type: input type
+				//name: input name
+				//label: input label
 				text: {
 					value: "Hello World",
 					type: "text",
@@ -36,7 +41,7 @@ class Drawing extends React.Component {
 				strokeSize: {
 					value: 10,
 					type: "range",
-					name: "size",
+					name: "strokeSize",
 					label: "Stroke Size"
 				},
 				yOffset: {
@@ -87,7 +92,10 @@ class Drawing extends React.Component {
 				key: new Date(),
 				properties: {
 					...this.state.properties,
-					[property]: e.target.checked
+					[property]: {
+						...this.state.properties[property],
+						value: e.target.checked
+					}
 				}
 			});
 		} else {
@@ -95,14 +103,22 @@ class Drawing extends React.Component {
 				key: new Date(),
 				properties: {
 					...this.state.properties,
-					[property]: e.target.value
+					[property]: {
+						...this.state.properties[property],
+						value: parseInt(e.target.value)
+					}
 				}
 			});
 		}
 	}
 	drawing(props) {
 		//draw here
-		console.log(props);
+		let cir = new Paper.Path.Circle(Paper.view.center, props.size.value);
+		cir.fillColor = props.color.value;
+		cir.position.x += props.xOffset.value;
+		cir.position.y += props.yOffset.value;
+		cir.strokeColor = "red";
+		cir.strokeWidth = props.strokeSize.value;
 	}
 	render() {
 		return (
