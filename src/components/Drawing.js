@@ -3,7 +3,6 @@ import Paper from "paper";
 
 import Selectors from "./Selectors";
 import { remapNumbers } from "../util";
-// import { getRandomInt } from "../util";
 
 class Drawing extends React.Component {
 	constructor(props) {
@@ -30,14 +29,12 @@ class Drawing extends React.Component {
 	componentDidMount() {
 		Paper.setup(this.canvas);
 		Paper.project.clear();
-		// patterns[this.state.properties.pattern](this.state.properties);
 		this.makeCaligraphy(this.state.properties);
 		Paper.project.view.scale(0.8);
 	}
 	componentDidUpdate() {
 		Paper.setup(this.canvas);
 		Paper.project.clear();
-		// patterns[this.state.properties.pattern](this.state.properties);
 		this.makeCaligraphy(this.state.properties);
 		Paper.project.view.scale(0.8);
 	}
@@ -62,8 +59,6 @@ class Drawing extends React.Component {
 		}
 	}
 	makeCaligraphy(props) {
-		// console.log(props);
-
 		let mainText = new Paper.PointText(Paper.view.center);
 		mainText.content = props.text;
 		mainText.justification = "center";
@@ -91,27 +86,12 @@ class Drawing extends React.Component {
 			return textGroup;
 		};
 
-		const flipping = () => {
-			let textGroup = new Paper.Group();
-			let tempText = mainText.clone();
-
-			tempText.scale(1, -1, Paper.view.center);
-			textGroup.addChildren([mainText, tempText]);
-
-			let flippedGroup = textGroup.clone();
-			flippedGroup.scale(-1, 1, Paper.view.center);
-
-			let mainGroup = new Paper.Group([textGroup, flippedGroup]);
-
-			for (let i = 0; i < props.divisions; i++) {
-				let tempGroup = mainGroup.clone();
-				tempGroup.rotate((360 / props.divisions) * i, Paper.view.center);
-			}
-		};
 		if (this.state.properties.method === "rotation") {
 			rotation();
 		} else {
-			rotation().clone().scale(1, -1, Paper.view.center);
+			rotation()
+				.clone()
+				.scale(1, -1, Paper.view.center);
 		}
 		mainText.remove();
 	}
