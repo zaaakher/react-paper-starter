@@ -11,13 +11,14 @@ class Drawing extends React.Component {
 		this.state = {
 			key: new Date(),
 			properties: {
+				method: "rotation",
 				rotation: 10,
 				maxRange: 50,
-				size: 10,
+				size: 20,
 				divisions: 7,
 				strokeSize: 1,
-				xOffset: 5,
-				yOffset: 5,
+				xOffset: 20,
+				yOffset: 20,
 				text: "Hello World!",
 				color: "#000000",
 				bgColor: "#ffffff"
@@ -78,14 +79,40 @@ class Drawing extends React.Component {
 			[0, props.maxRange],
 			[0, Paper.view.bounds.height]
 		);
-		let textGroup = new Paper.Group();
+		const rotation = () => {
+			let textGroup = new Paper.Group();
 
-		for (let i = 0; i < props.divisions; i++) {
+			for (let i = 0; i < props.divisions; i++) {
+				let tempText = mainText.clone();
+				tempText.rotate((360 / props.divisions) * i, Paper.view.center);
+				textGroup.addChild(tempText);
+			}
+			textGroup.rotate(props.rotation, Paper.view.center);
+			return textGroup;
+		};
+
+		const flipping = () => {
+			let textGroup = new Paper.Group();
 			let tempText = mainText.clone();
-			tempText.rotate((360 / props.divisions) * i, Paper.view.center);
-			textGroup.addChild(tempText);
+
+			tempText.scale(1, -1, Paper.view.center);
+			textGroup.addChildren([mainText, tempText]);
+
+			let flippedGroup = textGroup.clone();
+			flippedGroup.scale(-1, 1, Paper.view.center);
+
+			let mainGroup = new Paper.Group([textGroup, flippedGroup]);
+
+			for (let i = 0; i < props.divisions; i++) {
+				let tempGroup = mainGroup.clone();
+				tempGroup.rotate((360 / props.divisions) * i, Paper.view.center);
+			}
+		};
+		if (this.state.properties.method === "rotation") {
+			rotation();
+		} else {
+			rotation().clone().scale(1, -1, Paper.view.center);
 		}
-		textGroup.rotate(props.rotation,Paper.view.center);
 		mainText.remove();
 	}
 	render() {

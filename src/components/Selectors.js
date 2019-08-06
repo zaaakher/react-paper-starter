@@ -1,9 +1,14 @@
 import React from "react";
-import patterns from "../patterns";
 
 const Selectors = props => (
 	<div className="selectors">
 		<div>
+			<p>Method: {props.mainState.properties.method}</p>
+			<select name="method" id="method" onChange={props.handleChange}>
+				<option value="rotation">Rotation</option>
+				<option value="flipping">Flipping</option>
+			</select>
+
 			<p>Text: {props.mainState.properties.text}</p>
 			<input type="text" name="text" onChange={props.handleChange} />
 
@@ -23,17 +28,6 @@ const Selectors = props => (
 				value={props.mainState.properties.size}
 				onChange={props.handleChange}
 			/>
-			{/* 
-			<p>Stroke Size: {props.mainState.properties.strokeSize}</p>
-			<input
-				className="form-control-range"
-				type="range"
-				min="1"
-				max={props.mainState.properties.maxRange}
-				name="strokeSize"
-				value={props.mainState.properties.strokeSize}
-				onChange={props.handleChange}
-			/> */}
 
 			<p>x-offset: {props.mainState.properties.xOffset}</p>
 			<input
