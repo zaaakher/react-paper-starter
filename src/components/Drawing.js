@@ -2,7 +2,6 @@ import React from "react";
 import Paper from "paper";
 
 import Selectors from "./Selectors";
-import { remapNumbers } from "../util";
 
 class Drawing extends React.Component {
 	constructor(props) {
@@ -10,32 +9,75 @@ class Drawing extends React.Component {
 		this.state = {
 			key: new Date(),
 			properties: {
-				method: "rotation",
-				rotation: 10,
-				maxRange: 50,
-				size: 20,
-				divisions: 7,
-				strokeSize: 1,
-				xOffset: 20,
-				yOffset: 20,
-				text: "Hello World!",
-				color: "#000000",
-				bgColor: "#ffffff"
+				text: {
+					value: "Hello World",
+					type: "text",
+					name: "text",
+					label: "Text"
+				},
+				divisions: {
+					value: 7,
+					type: "number",
+					name: "divisions",
+					label: "Divisions"
+				},
+				maxRange: {
+					value: 50,
+					type: "number",
+					name: "maxRange",
+					label: "Max Range"
+				},
+				size: {
+					value: 20,
+					type: "range",
+					name: "size",
+					label: "Size"
+				},
+				strokeSize: {
+					value: 10,
+					type: "range",
+					name: "size",
+					label: "Stroke Size"
+				},
+				yOffset: {
+					value: 20,
+					type: "range",
+					name: "yOffset",
+					label: "Y-Offset"
+				},
+				xOffset: {
+					value: 20,
+					type: "range",
+					name: "xOffset",
+					label: "X-Offset"
+				},
+				color: {
+					value: "#000000",
+					type: "color",
+					name: "color",
+					label: "Color"
+				},
+				bgColor: {
+					value: "#ffffff",
+					type: "color",
+					name: "bgColor",
+					label: "Background Color"
+				}
 			}
 		};
 		this.handleChange = this.handleChange.bind(this);
-		this.makeCaligraphy = this.makeCaligraphy.bind(this);
+		this.drawing = this.drawing.bind(this);
 	}
 	componentDidMount() {
 		Paper.setup(this.canvas);
 		Paper.project.clear();
-		this.makeCaligraphy(this.state.properties);
+		this.drawing(this.state.properties);
 		Paper.project.view.scale(0.8);
 	}
 	componentDidUpdate() {
 		Paper.setup(this.canvas);
 		Paper.project.clear();
-		this.makeCaligraphy(this.state.properties);
+		this.drawing(this.state.properties);
 		Paper.project.view.scale(0.8);
 	}
 	handleChange(e) {
@@ -58,42 +100,9 @@ class Drawing extends React.Component {
 			});
 		}
 	}
-	makeCaligraphy(props) {
-		let mainText = new Paper.PointText(Paper.view.center);
-		mainText.content = props.text;
-		mainText.justification = "center";
-		mainText.fillColor = props.color;
-		mainText.fontSize = props.size;
-		mainText.position.x = remapNumbers(
-			props.xOffset,
-			[0, props.maxRange],
-			[0, Paper.view.bounds.width]
-		);
-		mainText.position.y = remapNumbers(
-			props.yOffset,
-			[0, props.maxRange],
-			[0, Paper.view.bounds.height]
-		);
-		const rotation = () => {
-			let textGroup = new Paper.Group();
-
-			for (let i = 0; i < props.divisions; i++) {
-				let tempText = mainText.clone();
-				tempText.rotate((360 / props.divisions) * i, Paper.view.center);
-				textGroup.addChild(tempText);
-			}
-			textGroup.rotate(props.rotation, Paper.view.center);
-			return textGroup;
-		};
-
-		if (this.state.properties.method === "rotation") {
-			rotation();
-		} else {
-			rotation()
-				.clone()
-				.scale(1, -1, Paper.view.center);
-		}
-		mainText.remove();
+	drawing(props) {
+		//draw here
+		console.log(props);
 	}
 	render() {
 		return (
@@ -113,7 +122,6 @@ class Drawing extends React.Component {
 					mainState={this.state}
 					handleChange={e => this.handleChange(e)}
 				/>
-
 				<canvas
 					onClick={() => this.setState({ key: new Date() })}
 					style={{ backgroundColor: this.state.properties.bgColor }}

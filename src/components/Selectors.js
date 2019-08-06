@@ -2,84 +2,20 @@ import React from "react";
 
 const Selectors = props => (
 	<div className="selectors">
-		<div>
-			<p>Method: {props.mainState.properties.method}</p>
-			<select name="method" id="method" onChange={props.handleChange}>
-				<option value="rotation">Rotation</option>
-				<option value="flipping">Flipping</option>
-			</select>
-
-			<p>Text: {props.mainState.properties.text}</p>
-			<input type="text" name="text" onChange={props.handleChange} />
-
-			<p>Divisions: {props.mainState.properties.divisions}</p>
-			<input type="number" name="divisions" onChange={props.handleChange} />
-
-			<p>Max Range: {props.mainState.properties.maxRange}</p>
-			<input type="number" name="maxRange" onChange={props.handleChange} />
-
-			<p>Size: {props.mainState.properties.size}</p>
-			<input
-				className="form-control-range"
-				type="range"
-				min="1"
-				max={props.mainState.properties.maxRange}
-				name="size"
-				value={props.mainState.properties.size}
-				onChange={props.handleChange}
-			/>
-
-			<p>x-offset: {props.mainState.properties.xOffset}</p>
-			<input
-				className="form-control-range"
-				type="range"
-				min="1"
-				max={props.mainState.properties.maxRange}
-				name="xOffset"
-				value={props.mainState.properties.xOffset}
-				onChange={props.handleChange}
-			/>
-
-			<p>y-offset: {props.mainState.properties.yOffset}</p>
-			<input
-				className="form-control-range"
-				type="range"
-				min="1"
-				max={props.mainState.properties.maxRange}
-				name="yOffset"
-				value={props.mainState.properties.yOffset}
-				onChange={props.handleChange}
-			/>
-		</div>
-		<div>
-			<p>Color: {props.mainState.properties.color}</p>
-			<input
-				type="color"
-				value={props.mainState.properties.color}
-				name="color"
-				onChange={props.handleChange}
-			/>
-
-			<p>Background Color: {props.mainState.properties.bgColor}</p>
-			<input
-				type="color"
-				value={props.mainState.properties.bgColor}
-				name="bgColor"
-				onChange={props.handleChange}
-			/>
-			<br />
-			<br />
-			<p>Rotation: {props.mainState.properties.rotation}</p>
-			<input
-				className="form-control-range"
-				type="range"
-				min="1"
-				max={props.mainState.properties.maxRange}
-				name="rotation"
-				value={props.mainState.properties.rotation}
-				onChange={props.handleChange}
-			/>
-		</div>
+			{Object.keys(props.mainState.dynamic).map(key => {
+				let p = props.mainState.dynamic[key];
+				return (
+					<div>
+						<p>{p.label}</p>
+						<input
+							type={p.type}
+							name={p.name}
+							value={p.value}
+							onChange={props.handleChange}
+						/>
+					</div>
+				);
+			})}
 	</div>
 );
 
